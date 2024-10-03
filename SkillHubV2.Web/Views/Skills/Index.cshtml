@@ -1,0 +1,49 @@
+﻿@model List<SkillsHubV2.Web.Models.SkillViewModel>
+
+@{
+    ViewBag.Title = "Skill Details";
+}
+
+<h1>@ViewBag.Title</h1>
+<h2>@ViewBag.Subtitle</h2>
+<h3>@ViewData["AnotherSubtitle"]</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Description)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var skill in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => skill.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => skill.Description)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@skill.Id" class="btn btn-warning">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@skill.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Skill</a>
+</p>
+
+
+
+
+
