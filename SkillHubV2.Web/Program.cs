@@ -1,4 +1,6 @@
 using Microsoft.EntityFrameworkCore;
+using SkillsHubV2.BLL.Interfaces;
+using SkillsHubV2.BLL.Services;
 using SkillsHubV2.DAL.Data;
 
 namespace SkillsHubV2.Web;
@@ -11,6 +13,7 @@ public class Program
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
+        builder.Services.AddScoped<ISkillsService, StubSkillsService>();
 
         var app = builder.Build();
 

@@ -1,41 +1,49 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using SkillsHubV2.BLL.Interfaces;
+using SkillsHubV2.BLL.Services;
+using SkillsHubV2.Domain.Entities;
 using SkillsHubV2.Web.Models;
 
 namespace SkillsHubV2.Web.Controllers;
 public class SkillsController : Controller
 {
-    // Временное хранилище для списка скиллов
-    private static List<SkillViewModel> skills =
-    [
-        new SkillViewModel { Id = 1, Name = "C#", Description = "Advanced" },
-        new SkillViewModel { Id = 2, Name = "ASP.NET", Description = "Intermediate" },
-        new SkillViewModel { Id = 3, Name = "HTML/CSS", Description = "Beginner" }
-    ];
+    private readonly ISkillsService _skillService;
+    public SkillsController(ISkillsService skillService)
+    {
+        _skillService = skillService;
+    }
 
     // GET: SkillsController
     public IActionResult Index()
     {
-        ViewBag.Subtitle = "Programming in C#";
-        ViewData["AnotherSubtitle"] = "ASP.NET Core MVC";
+        var skills = _skillService.GetAllSkills();
 
-        return View(skills);
+        var skillViewModels = skills.Select(skill => new SkillViewModel
+        {
+            Id = skill.Id,
+            Name = skill.Name,
+            Description = skill.Description
+        }).ToList();
+
+        return View(skillViewModels);
     }
 
-    // GET: HomeController/Create
-    public IActionResult Create()
+    public IActionResult Create ()
     {
         return View();
     }
 
-    // POST: Skills/Create
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Create([FromForm] SkillViewModel skill)
+    public IActionResult Create ([FromForm] SkillViewModel skill)
     {
         if (ModelState.IsValid)
         {
-            skill.Id = skills.Count > 0 ? skills.Max(s => s.Id) + 1 : 1;
-            skills.Add(skill);
+            _skillService.AddSkill(new Skill
+            {
+                Id = skill.Id,
+                Name = skill.Name,
+                Description = skill.Description
+            });
 
             return RedirectToAction(nameof(Index));
         }
@@ -43,25 +51,34 @@ public class SkillsController : Controller
         return View(skill);
     }
 
-    // GET: Skills/Edit/1
-    public IActionResult Edit(int id)
+    public IActionResult Edit (int id)
     {
-        var skill = skills.FirstOrDefault(s => s.Id == id);
+        var skill = _skillService.GetSkillById(id);
 
         if (skill == null)
         {
             return NotFound();
         }
 
-        return View(skill);
+        var skillViewModel = new SkillViewModel
+        {
+            Id = skill.Id,
+            Name = skill.Name,
+            Description = skill.Description
+        };
+
+        return View(skillViewModel);
     }
 
-    // POST: Skills/Edit/1
     [HttpPost]
-    [ValidateAntiForgeryToken]
-    public IActionResult Edit(int id, [FromForm] SkillViewModel skill)
+    public IActionResult Edit (int id, [FromForm] SkillViewModel skill)
     {
-        var existingSkill = skills.FirstOrDefault(s => s.Id == id);
+        if (id != skill.Id)
+        {
+            return NotFound();
+        }
+
+        var existingSkill = _skillService.GetSkillById(id);
 
         if (existingSkill == null)
         {
@@ -71,32 +88,38 @@ public class SkillsController : Controller
         existingSkill.Name = skill.Name;
         existingSkill.Description = skill.Description;
 
+        _skillService.UpdateSkill(existingSkill);
+
         return RedirectToAction(nameof(Index));
     }
 
-    // GET: Skills/Delete/1
-    public IActionResult Delete(int id)
+    public IActionResult Delete (int id)
     {
-        var skill = skills.FirstOrDefault(s => s.Id == id);
+        var skill = _skillService.GetSkillById(id);
 
         if (skill == null)
         {
             return NotFound();
         }
 
-        return View(skill);
+        var skillViewModel = new SkillViewModel
+        {
+            Id = skill.Id,
+            Name = skill.Name,
+            Description = skill.Description
+        };
+
+        return View(skillViewModel);
     }
 
-    // POST: Skills/Delete/1
     [HttpPost, ActionName("Delete")]
-    [ValidateAntiForgeryToken]
-    public IActionResult DeleteConfirmed(int id)
+    public IActionResult DeleteConfirmed (int id)
     {
-        var skill = skills.FirstOrDefault(s => s.Id == id);
+        var skill = _skillService.GetSkillById(id);
 
         if (skill != null)
         {
-            skills.Remove(skill);
+            _skillService.DeleteSkill(skill.Id);
         }
 
         return RedirectToAction(nameof(Index));
