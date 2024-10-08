@@ -6,9 +6,9 @@ public class StubSkillsService : ISkillsService
 {
     private static List<Skill> skills =
     [
-        new Skill { Id = 1, Name = "C#", Description = "Advanced" },
-        new Skill { Id = 2, Name = "ASP.NET", Description = "Intermediate" },
-        new Skill { Id = 3, Name = "HTML/CSS", Description = "Beginner" }
+        new HardSkill { Id = 1, Name = "C#", Description = "Advanced" },
+        new HardSkill { Id = 2, Name = "ASP.NET", Description = "Intermediate" },
+        new HardSkill { Id = 3, Name = "HTML/CSS", Description = "Beginner" }
     ];
 
     public IEnumerable<Skill> GetAllSkills ()

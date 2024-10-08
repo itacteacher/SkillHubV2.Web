@@ -1,6 +1,6 @@
 ﻿using SkillsHubV2.BLL.Interfaces;
 using SkillsHubV2.Domain.Entities;
-using SkillsHubV2.DAL.Repository;
+using SkillsHubV2.DAL.Repositories.Interfaces;
 
 namespace SkillsHubV2.BLL.Services;
 public class SkillsService : ISkillsService

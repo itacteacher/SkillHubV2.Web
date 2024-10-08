@@ -38,7 +38,7 @@ public class SkillsController : Controller
     {
         if (ModelState.IsValid)
         {
-            _skillService.AddSkill(new Skill
+            _skillService.AddSkill(new HardSkill
             {
                 Id = skill.Id,
                 Name = skill.Name,

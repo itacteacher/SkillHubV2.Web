@@ -1,8 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SkillsHubV2.DAL.Data;
+using SkillsHubV2.DAL.Repositories.Interfaces;
 using SkillsHubV2.Domain.Entities;
 
-namespace SkillsHubV2.DAL.Repository;
+namespace SkillsHubV2.DAL.Repositories;
 public class SkillsRepository : ISkillsRepository
 {
     private readonly ApplicationDbContext _context;
