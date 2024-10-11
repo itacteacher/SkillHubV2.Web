@@ -11,8 +11,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillsHubV2.DAL", "SkillsHu
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SkillsHubV2.Domain", "SkillsHub.Domain\SkillsHubV2.Domain.csproj", "{ED92D71D-95E0-4553-9380-148B25EDF473}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SkillsHubV2.BLL.Tests", "SkillsHubV2.BLL.Tests\SkillsHubV2.BLL.Tests.csproj", "{22D58964-BA4A-4F91-9BA3-0BFB748767E1}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -35,10 +33,6 @@ Global
 		{ED92D71D-95E0-4553-9380-148B25EDF473}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{ED92D71D-95E0-4553-9380-148B25EDF473}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{ED92D71D-95E0-4553-9380-148B25EDF473}.Release|Any CPU.Build.0 = Release|Any CPU
-		{22D58964-BA4A-4F91-9BA3-0BFB748767E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{22D58964-BA4A-4F91-9BA3-0BFB748767E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{22D58964-BA4A-4F91-9BA3-0BFB748767E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{22D58964-BA4A-4F91-9BA3-0BFB748767E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

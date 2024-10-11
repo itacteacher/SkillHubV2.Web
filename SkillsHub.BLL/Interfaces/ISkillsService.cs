@@ -1,11 +1,9 @@
-﻿using SkillsHubV2.Domain.Entities;
-
-namespace SkillsHubV2.BLL.Interfaces;
-public interface ISkillsService
+﻿namespace SkillsHubV2.BLL.Interfaces;
+public interface ISkillsService<T> where T : class
 {
-    IEnumerable<Skill>? GetAllSkills ();
-    Skill? GetSkillById (int id);
-    void AddSkill (Skill skill);
-    void UpdateSkill (Skill skill);
-    void DeleteSkill (int id);
+    Task<T> CreateAsync (T entity);
+    Task<T> GetByIdAsync (int id);
+    Task<IEnumerable<T>> GetAllAsync ();
+    Task UpdateAsync (T entity);
+    Task DeleteAsync (int id);
 }

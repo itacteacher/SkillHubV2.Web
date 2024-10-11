@@ -32,7 +32,7 @@ public static class DbInitializer
                 Name = "C#",
                 Description = "Programming language",
                 Technology = "C#",
-                ExperienceYears = 3
+                Level = 3
             },
             new HardSkill
             {
@@ -40,7 +40,7 @@ public static class DbInitializer
                 Name = "SQL",
                 Description = "Database management",
                 Technology = "SQL Server",
-                ExperienceYears = 2
+                Level = 2
             }
         );
 
@@ -56,33 +56,6 @@ public static class DbInitializer
                 Id = 2,
                 Username = "janedoe",
                 Email = "janedoe@example.com"
-            }
-        );
-
-        modelBuilder.Entity<UserSkill>().HasData(
-            new UserSkill
-            {
-                Id = 1,
-                UserId = 1,
-                SkillId = 1 // SoftSkill: Communication
-            },
-            new UserSkill
-            {
-                Id = 2,
-                UserId = 1,
-                SkillId = 3 // HardSkill: C#
-            },
-            new UserSkill
-            {
-                Id = 3,
-                UserId = 2,
-                SkillId = 2 // SoftSkill: Teamwork
-            },
-            new UserSkill
-            {
-                Id = 4,
-                UserId = 2,
-                SkillId = 4 // HardSkill: SQL
             }
         );
     }

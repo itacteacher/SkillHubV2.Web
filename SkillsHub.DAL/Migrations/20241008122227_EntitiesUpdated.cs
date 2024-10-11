@@ -31,7 +31,7 @@ namespace SkillsHubV2.DAL.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false),
                     Technology = table.Column<string>(type: "nvarchar(max)", nullable: true),
-                    ExperienceYears = table.Column<int>(type: "int", nullable: false)
+                    Level = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -105,7 +105,7 @@ namespace SkillsHubV2.DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "HardSkills",
-                columns: new[] { "Id", "ExperienceYears", "Technology" },
+                columns: new[] { "Id", "Level", "Technology" },
                 values: new object[] { 3, 3, "C#" });
 
             migrationBuilder.UpdateData(
@@ -154,7 +154,7 @@ namespace SkillsHubV2.DAL.Migrations
 
             migrationBuilder.InsertData(
                 table: "HardSkills",
-                columns: new[] { "Id", "ExperienceYears", "Technology" },
+                columns: new[] { "Id", "Level", "Technology" },
                 values: new object[] { 4, 2, "SQL Server" });
 
             migrationBuilder.InsertData(

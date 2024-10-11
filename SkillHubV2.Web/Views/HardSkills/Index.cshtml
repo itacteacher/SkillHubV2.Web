@@ -1,0 +1,57 @@
+﻿@model List<SkillsHubV2.Domain.Entities.HardSkill>
+
+@{
+    ViewBag.Title = "Hard Skill Details";
+}
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Level)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Technology)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var skill in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => skill.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => skill.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => skill.Level)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => skill.Technology)
+                </td>
+                <td>
+                    <a asp-action="Edit" asp-route-id="@skill.Id" class="btn btn-warning">Edit</a> |
+                    <a asp-action="Delete" asp-route-id="@skill.Id" class="btn btn-danger">Delete</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<p>
+    <a asp-action="Create" class="btn btn-primary">Create New Skill</a>
+</p>
+
+
+
+
+

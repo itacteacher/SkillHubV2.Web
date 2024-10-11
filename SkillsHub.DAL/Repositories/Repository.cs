@@ -1,54 +1,43 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using SkillsHubV2.DAL.Data;
 using SkillsHubV2.DAL.Repositories.Interfaces;
 
 namespace SkillsHubV2.DAL.Repositories;
 public class Repository<T> : IRepository<T> where T: class
 {
-    private readonly ApplicationDbContext _context;
+    private readonly DbContext _context;
     private readonly DbSet<T> _dbSet;
 
-    public Repository (ApplicationDbContext context)
+    public Repository (DbContext context)
     {
         _context = context;
         _dbSet = _context.Set<T>();
     }
 
-    public async Task<T> GetByIdAsync (int id)
+    public async Task<T> CreateAsync (T entity)
     {
-        return await _dbSet.FindAsync(id);
-    }
+        _dbSet.Add(entity);
+        await _context.SaveChangesAsync().ConfigureAwait(false);
 
+        return entity;
+    }
     public async Task<IEnumerable<T>> GetAllAsync ()
     {
-        return await _dbSet.ToListAsync();
+        return await _dbSet.ToListAsync().ConfigureAwait(false);
     }
 
-    public async Task AddAsync (T entity)
+    public async Task<T> GetByIdAsync (int id)
     {
-        await _dbSet.AddAsync(entity);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task AddRangeAsync (IEnumerable<T> entities)
-    {
-        await _dbSet.AddRangeAsync(entities);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task UpdateAsync (T entity)
-    {
-        _dbSet.Update(entity);
-        await _context.SaveChangesAsync();
+        return await _dbSet.FindAsync(id).ConfigureAwait(false);
     }
 
     public async Task DeleteAsync (int id)
     {
-        var entity = await GetByIdAsync(id);
+        var entity = await _dbSet.FindAsync(id).ConfigureAwait(false);
+
         if (entity != null)
         {
             _dbSet.Remove(entity);
-            await _context.SaveChangesAsync();
+            await _context.SaveChangesAsync().ConfigureAwait(false);
         }
     }
 }

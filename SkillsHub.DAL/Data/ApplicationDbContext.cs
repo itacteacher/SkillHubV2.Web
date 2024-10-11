@@ -13,7 +13,6 @@ public class ApplicationDbContext : DbContext
     public DbSet<SoftSkill> SoftSkills { get; set; }
     public DbSet<HardSkill> HardSkills { get; set; }
     public DbSet<User> Users { get; set; }
-    public DbSet<UserSkill> UserSkills { get; set; }
 
     protected override void OnModelCreating (ModelBuilder modelBuilder)
     {
@@ -33,19 +32,18 @@ public class ApplicationDbContext : DbContext
             .WithMany()
             .HasForeignKey(hs => hs.Id);
 
-        modelBuilder.Entity<UserSkill>()
-            .HasKey(us => us.Id);
+        modelBuilder.Entity<User>()
+            .ToTable("Users")
+            .HasKey(u => u.Id);
 
-        // Настройка связи многие-ко-многим
-        modelBuilder.Entity<UserSkill>()
-            .HasOne(us => us.User)
-            .WithMany(u => u.UserSkills)
-            .HasForeignKey(us => us.UserId);
+        modelBuilder.Entity<Skill>()
+            .ToTable("Skills")
+            .HasKey(s => s.Id);
 
-        modelBuilder.Entity<UserSkill>()
-            .HasOne(us => us.Skill)
+        modelBuilder.Entity<User>()
+            .HasMany(u => u.Skills)
             .WithMany()
-            .HasForeignKey(us => us.SkillId);
+            .UsingEntity(j => j.ToTable("UserSkills"));
 
         DbInitializer.SeedData(modelBuilder);
     }

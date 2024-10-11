@@ -6,5 +6,5 @@ namespace SkillsHubV2.Domain.Entities;
 public class HardSkill : Skill
 {
     public string? Technology { get; set; }
-    public int ExperienceYears { get; set; }
+    public int Level { get; set; }
 }

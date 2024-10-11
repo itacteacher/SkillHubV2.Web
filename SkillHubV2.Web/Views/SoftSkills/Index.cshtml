@@ -1,12 +1,8 @@
-﻿@model List<SkillsHubV2.Web.Models.SkillViewModel>
+﻿@model List<SkillsHubV2.Domain.Entities.SoftSkill>
 
 @{
-    ViewBag.Title = "Skill Details";
+    ViewBag.Title = "Soft Skill Details";
 }
-
-<h1>@ViewBag.Title</h1>
-<h2>@ViewBag.Subtitle</h2>
-<h3>@ViewData["AnotherSubtitle"]</h3>
 
 <table class="table">
     <thead>
@@ -16,6 +12,12 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.First().Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().CommunicationStyle)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.First().Level)
             </th>
             <th></th>
         </tr>
@@ -29,6 +31,12 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => skill.Description)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => skill.CommunicationStyle)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => skill.Level)
                 </td>
                 <td>
                     <a asp-action="Edit" asp-route-id="@skill.Id" class="btn btn-warning">Edit</a> |

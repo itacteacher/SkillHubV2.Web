@@ -4,7 +4,7 @@ using SkillsHubV2.BLL.Services;
 using SkillsHubV2.DAL.Data;
 using SkillsHubV2.DAL.Repositories;
 using SkillsHubV2.DAL.Repositories.Interfaces;
-using SkillsHubV2.DAL.Repository;
+using SkillsHubV2.Domain.Entities;
 
 namespace SkillsHubV2.Web;
 
@@ -20,10 +20,11 @@ public class Program
         builder.Services.AddDbContext<ApplicationDbContext>(option =>
                 option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
 
-        builder.Services.AddScoped<ISoftSkillsRepository, SoftSkillsRepository>();
-        builder.Services.AddScoped<ISkillsRepository, SkillsRepository>();
-        builder.Services.AddScoped<ISkillsService, StubSkillsService>();
-        builder.Services.AddScoped<ISoftSkillsService, SoftSkillsService>();
+        builder.Services.AddScoped<ISoftSkillRepository, SoftSkillRepository>();
+        builder.Services.AddScoped<IHardSkillRepository, HardSkillRepository>();
+        builder.Services.AddScoped<IUserRepository, UserRepository>();
+        builder.Services.AddScoped<ISkillsService<SoftSkill>, SoftSkillsService>();
+        builder.Services.AddScoped<ISkillsService<HardSkill>, HardSkillsService>();
 
         var app = builder.Build();
 
@@ -44,7 +45,7 @@ public class Program
 
         app.MapControllerRoute(
             name: "default",
-            pattern: "{controller=Skills}/{action=Index}/{id?}");
+            pattern: "{controller=SoftSkills}/{action=Index}/{id?}");
 
         app.Run();
     }

@@ -11,8 +11,8 @@ using SkillsHubV2.DAL.Data;
 namespace SkillsHubV2.DAL.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20241008122227_EntitiesUpdated")]
-    partial class EntitiesUpdated
+    [Migration("20241011194532_HardSkillColumnRename")]
+    partial class HardSkillColumnRename
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -23,6 +23,21 @@ namespace SkillsHubV2.DAL.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128);
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
+
+            modelBuilder.Entity("SkillUser", b =>
+                {
+                    b.Property<int>("SkillsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("SkillsId", "UserId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserSkills", (string)null);
+                });
 
             modelBuilder.Entity("SkillsHubV2.Domain.Entities.Skill", b =>
                 {
@@ -40,7 +55,7 @@ namespace SkillsHubV2.DAL.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Skills");
+                    b.ToTable("Skills", (string)null);
 
                     b.UseTptMappingStrategy();
                 });
@@ -54,14 +69,16 @@ namespace SkillsHubV2.DAL.Migrations
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
                     b.Property<string>("Email")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Username")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Users");
+                    b.ToTable("Users", (string)null);
 
                     b.HasData(
                         new
@@ -75,55 +92,6 @@ namespace SkillsHubV2.DAL.Migrations
                             Id = 2,
                             Email = "janedoe@example.com",
                             Username = "janedoe"
-                        });
-                });
-
-            modelBuilder.Entity("SkillsHubV2.Domain.Entities.UserSkill", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("SkillId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("SkillId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserSkills");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            SkillId = 1,
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 2,
-                            SkillId = 3,
-                            UserId = 1
-                        },
-                        new
-                        {
-                            Id = 3,
-                            SkillId = 2,
-                            UserId = 2
-                        },
-                        new
-                        {
-                            Id = 4,
-                            SkillId = 4,
-                            UserId = 2
                         });
                 });
 
@@ -189,23 +157,19 @@ namespace SkillsHubV2.DAL.Migrations
                         });
                 });
 
-            modelBuilder.Entity("SkillsHubV2.Domain.Entities.UserSkill", b =>
+            modelBuilder.Entity("SkillUser", b =>
                 {
-                    b.HasOne("SkillsHubV2.Domain.Entities.Skill", "Skill")
+                    b.HasOne("SkillsHubV2.Domain.Entities.Skill", null)
                         .WithMany()
-                        .HasForeignKey("SkillId")
+                        .HasForeignKey("SkillsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("SkillsHubV2.Domain.Entities.User", "User")
-                        .WithMany("UserSkills")
+                    b.HasOne("SkillsHubV2.Domain.Entities.User", null)
+                        .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("Skill");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("SkillsHubV2.Domain.Entities.HardSkill", b =>
@@ -224,11 +188,6 @@ namespace SkillsHubV2.DAL.Migrations
                         .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-                });
-
-            modelBuilder.Entity("SkillsHubV2.Domain.Entities.User", b =>
-                {
-                    b.Navigation("UserSkills");
                 });
 #pragma warning restore 612, 618
         }
