@@ -1,18 +1,26 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+﻿using SkillsHubV2.BLL.Interfaces;
+using SkillsHubV2.Domain.Entities;
+using System.ComponentModel.DataAnnotations;
 
 namespace SkillsHubV2.Web.Models;
 
-public class SkillViewModel
+public class SkillViewModel : IValidatableObject
 {
-    [Required(ErrorMessage = "Id is required.")]
-    public int Id { get; set; }
-
-    [Required(ErrorMessage = "Name is required.")]
-    [StringLength(100, ErrorMessage = "Name can't be longer than 100 characters.")]
+    [Required(ErrorMessage = "")]
     public string Name { get; set; }
 
-    [AllowNull]
-    [StringLength(500, ErrorMessage = "Description can't be longer than 500 characters.")]
-    public string? Description { get; set; }
+    private readonly ISkillsService<SoftSkill> _service;
+
+    public SkillViewModel (ISkillsService<SoftSkill> service)
+    {
+        _service = service;
+    }
+
+    public IEnumerable<ValidationResult> Validate (ValidationContext validationContext)
+    {
+        if (_service.IsNameTakenAsync(Name).Result)
+        {
+            yield return new ValidationResult("Name is taken.", ["Name"]);
+        }
+    }
 }

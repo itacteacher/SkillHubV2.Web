@@ -6,4 +6,6 @@ public interface ISkillsService<T> where T : class
     Task<IEnumerable<T>> GetAllAsync ();
     Task UpdateAsync (T entity);
     Task DeleteAsync (int id);
+
+    Task<bool> IsNameTakenAsync (string name);
 }

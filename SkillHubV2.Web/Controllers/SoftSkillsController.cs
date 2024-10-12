@@ -6,17 +6,31 @@ namespace SkillsHubV2.Web.Controllers;
 public class SoftSkillsController : Controller
 {
     private readonly ISkillsService<SoftSkill> _softSkillsService;
+    private readonly ILogger<SoftSkillsController> _logger;
 
-    public SoftSkillsController (ISkillsService<SoftSkill> softSkillsService)
+    public SoftSkillsController (ISkillsService<SoftSkill> softSkillsService, 
+        ILogger<SoftSkillsController> logger)
     {
         _softSkillsService = softSkillsService;
+        _logger = logger;
     }
 
     public async Task<IActionResult> Index ()
     {
-        var skills = await _softSkillsService.GetAllAsync();
+        _logger.LogInformation("Вход в метод Index()");
 
-        return View(skills);
+        try
+        {
+            var skills = await _softSkillsService.GetAllAsync();
+
+            return View(skills);
+        }
+        catch (Exception ex)
+        {
+            _logger.LogError(ex, "Ошибка в методе Index()");
+
+            return StatusCode(500, "Произошла ошибка");
+        }
     }
 
     public async Task<IActionResult> Details (int id)
@@ -39,6 +53,12 @@ public class SoftSkillsController : Controller
     [HttpPost]
     public async Task<IActionResult> Create (SoftSkill skill)
     {
+        if (await _softSkillsService.IsNameTakenAsync(skill.Name))
+        {
+            ModelState.AddModelError("Name", "Name is taken.");
+            return View(skill);
+        }
+
         if (ModelState.IsValid)
         {
             await _softSkillsService.CreateAsync(skill);

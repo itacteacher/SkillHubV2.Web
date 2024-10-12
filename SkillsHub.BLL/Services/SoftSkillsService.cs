@@ -1,4 +1,5 @@
-﻿using SkillsHubV2.BLL.Interfaces;
+﻿using Microsoft.EntityFrameworkCore;
+using SkillsHubV2.BLL.Interfaces;
 using SkillsHubV2.DAL.Repositories.Interfaces;
 using SkillsHubV2.Domain.Entities;
 
@@ -35,4 +36,14 @@ public class SoftSkillsService : ISkillsService<SoftSkill>
     {
         return _repository.DeleteAsync(id);
     }
+
+    public async Task<bool> IsNameTakenAsync (string name)
+    {
+        return await _repository.IsNameTakenAsync(name);
+    }
+
+    //public async Task<bool> IsUsernameTakenAsync (string username)
+    //{
+    //    return await _repository.AnyAsync(u => u.Username == username);
+    //}
 }

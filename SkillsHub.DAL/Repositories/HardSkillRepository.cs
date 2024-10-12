@@ -1,4 +1,5 @@
-﻿using SkillsHubV2.DAL.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using SkillsHubV2.DAL.Data;
 using SkillsHubV2.DAL.Repositories.Interfaces;
 using SkillsHubV2.Domain.Entities;
 
@@ -24,5 +25,10 @@ public class HardSkillRepository : Repository<HardSkill>, IHardSkillRepository
 
             await _context.SaveChangesAsync().ConfigureAwait(false);
         }
+    }
+
+    public async Task<bool> IsNameTakenAsync (string name)
+    {
+        return await _context.HardSkills.AnyAsync(u => u.Name == name);
     }
 }

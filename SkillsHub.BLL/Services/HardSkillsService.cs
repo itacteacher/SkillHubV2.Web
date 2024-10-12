@@ -6,6 +6,7 @@ namespace SkillsHubV2.BLL.Services;
 public class HardSkillsService : ISkillsService<HardSkill>
 {
     private readonly IHardSkillRepository _repository;
+
     public HardSkillsService (IHardSkillRepository repository)
     {
         _repository = repository;
@@ -36,5 +37,10 @@ public class HardSkillsService : ISkillsService<HardSkill>
     public async Task DeleteAsync (int id)
     {
         await _repository.DeleteAsync(id);
+    }
+
+    public async Task<bool> IsNameTakenAsync (string name)
+    {
+        return await _repository.IsNameTakenAsync(name);
     }
 }

@@ -1,6 +1,9 @@
+using FluentValidation;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
 using SkillsHubV2.BLL.Interfaces;
 using SkillsHubV2.BLL.Services;
+using SkillsHubV2.BLL.Validators;
 using SkillsHubV2.DAL.Data;
 using SkillsHubV2.DAL.Repositories;
 using SkillsHubV2.DAL.Repositories.Interfaces;
@@ -25,6 +28,16 @@ public class Program
         builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<ISkillsService<SoftSkill>, SoftSkillsService>();
         builder.Services.AddScoped<ISkillsService<HardSkill>, HardSkillsService>();
+        builder.Services.AddScoped<IValidator<HardSkill>, HardSkillValidator>();
+
+        Log.Logger = new LoggerConfiguration()
+            .MinimumLevel.Debug()
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
+            .CreateLogger();
+
+        builder.Host.UseSerilog();
 
         var app = builder.Build();
 

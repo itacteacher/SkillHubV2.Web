@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Mvc;
 using SkillsHubV2.BLL.Interfaces;
 using SkillsHubV2.Domain.Entities;
 
@@ -7,10 +8,12 @@ namespace SkillsHubV2.Web.Controllers;
 public class HardSkillsController : Controller
 {
     private readonly ISkillsService<HardSkill> _hardSkillsService;
+    private readonly IValidator<HardSkill> _validator;
 
-    public HardSkillsController (ISkillsService<HardSkill> hardSkillsService)
+    public HardSkillsController (ISkillsService<HardSkill> hardSkillsService, IValidator<HardSkill> validator)
     {
         _hardSkillsService = hardSkillsService;
+        _validator = validator;
     }
 
     public async Task<IActionResult> Index ()
@@ -39,13 +42,20 @@ public class HardSkillsController : Controller
     [HttpPost]
     public async Task<IActionResult> Create (HardSkill skill)
     {
-        if (ModelState.IsValid)
+        var result = await _validator.ValidateAsync(skill);
+
+        if (!result.IsValid)
         {
-            await _hardSkillsService.CreateAsync(skill);
-            return RedirectToAction(nameof(Index));
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(error.PropertyName, error.ErrorMessage);
+            }
+
+            return View(skill);
         }
 
-        return View(skill);
+        await _hardSkillsService.CreateAsync(skill);
+        return RedirectToAction(nameof(Index));
     }
 
     public async Task<IActionResult> Edit (int id)
