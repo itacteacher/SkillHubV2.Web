@@ -14,7 +14,7 @@ public class HardSkillRepository : Repository<HardSkill>, IHardSkillRepository
 
     public async Task UpdateAsync (HardSkill entity)
     {
-        var originalEntity = await _context.HardSkills.FindAsync(entity.Id).ConfigureAwait(false);
+        var originalEntity = await _context.HardSkills.FindAsync(entity.Id);
 
         if (originalEntity != null)
         {
@@ -23,7 +23,7 @@ public class HardSkillRepository : Repository<HardSkill>, IHardSkillRepository
             originalEntity.Level = entity.Level;
             originalEntity.Technology = entity.Technology;
 
-            await _context.SaveChangesAsync().ConfigureAwait(false);
+            await _context.SaveChangesAsync();
         }
     }
 

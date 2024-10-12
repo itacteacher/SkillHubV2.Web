@@ -14,7 +14,7 @@ public class SoftSkillRepository : Repository<SoftSkill>, ISoftSkillRepository
 
     public async Task UpdateAsync (SoftSkill entity)
     {
-        var originalEntity = await _context.SoftSkills.FindAsync(entity.Id).ConfigureAwait(false);
+        var originalEntity = await _context.SoftSkills.FindAsync(entity.Id);
         
         if (originalEntity != null)
         {
@@ -23,7 +23,7 @@ public class SoftSkillRepository : Repository<SoftSkill>, ISoftSkillRepository
             originalEntity.Level = entity.Level;
             originalEntity.CommunicationStyle = entity.CommunicationStyle;
 
-            await _context.SaveChangesAsync().ConfigureAwait(false);
+            await _context.SaveChangesAsync();
         }
     }
 

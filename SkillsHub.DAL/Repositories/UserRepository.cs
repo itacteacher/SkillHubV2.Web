@@ -18,7 +18,7 @@ public class UserRepository : Repository<User>, IUserRepository
         var originalEntity = await _context.Users
             .Include(u => u.Skills)
             .FirstOrDefaultAsync(u => u.Id == entity.Id)
-            .ConfigureAwait(false);
+            ;
 
         if (originalEntity != null)
         {
@@ -32,7 +32,7 @@ public class UserRepository : Repository<User>, IUserRepository
                 originalEntity.Skills.Add(skill);
             }
 
-            await _context.SaveChangesAsync().ConfigureAwait(false);
+            await _context.SaveChangesAsync();
         }
     }
 }
