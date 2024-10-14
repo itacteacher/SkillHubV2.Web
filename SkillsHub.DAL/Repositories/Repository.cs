@@ -37,6 +37,7 @@ public class Repository<T> : IRepository<T> where T: class
         if (entity != null)
         {
             _dbSet.Remove(entity);
+
             await _context.SaveChangesAsync();
         }
     }

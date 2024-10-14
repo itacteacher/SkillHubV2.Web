@@ -3,7 +3,7 @@ using System.Diagnostics.CodeAnalysis;
 
 namespace SkillsHubV2.Domain.Entities;
 
-public abstract class Skill // Базовый класс для TPT
+public abstract class Skill
 {
     [Key]
     public int Id { get; set; }

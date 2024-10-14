@@ -17,8 +17,7 @@ public class UserRepository : Repository<User>, IUserRepository
     {
         var originalEntity = await _context.Users
             .Include(u => u.Skills)
-            .FirstOrDefaultAsync(u => u.Id == entity.Id)
-            ;
+            .FirstOrDefaultAsync(u => u.Id == entity.Id);
 
         if (originalEntity != null)
         {

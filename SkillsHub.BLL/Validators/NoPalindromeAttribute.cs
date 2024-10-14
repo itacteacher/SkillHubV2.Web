@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace SkillsHubV2.Domain.Validators;
+namespace SkillsHubV2.BLL.Validators;
 
 public class NoPalindromeAttribute : ValidationAttribute
 {

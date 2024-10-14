@@ -1,31 +1,24 @@
 using FluentValidation;
-using Microsoft.EntityFrameworkCore;
 using Serilog;
 using SkillsHubV2.BLL.Interfaces;
 using SkillsHubV2.BLL.Services;
 using SkillsHubV2.BLL.Validators;
 using SkillsHubV2.DAL.Data;
-using SkillsHubV2.DAL.Repositories;
-using SkillsHubV2.DAL.Repositories.Interfaces;
 using SkillsHubV2.Domain.Entities;
 
 namespace SkillsHubV2.Web;
 
 public class Program
 {
-    public static void Main (string[] args)
+    public static async Task Main (string[] args)
     {
         var builder = WebApplication.CreateBuilder(args);
 
         // Add services to the container.
         builder.Services.AddControllersWithViews();
 
-        builder.Services.AddDbContext<ApplicationDbContext>(option =>
-                option.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection")));
+        builder.Services.AddDbWithRepositories(builder.Configuration);
 
-        builder.Services.AddScoped<ISoftSkillRepository, SoftSkillRepository>();
-        builder.Services.AddScoped<IHardSkillRepository, HardSkillRepository>();
-        builder.Services.AddScoped<IUserRepository, UserRepository>();
         builder.Services.AddScoped<ISkillsService<SoftSkill>, SoftSkillsService>();
         builder.Services.AddScoped<ISkillsService<HardSkill>, HardSkillsService>();
         builder.Services.AddScoped<IValidator<HardSkill>, HardSkillValidator>();
@@ -40,6 +33,11 @@ public class Program
         builder.Host.UseSerilog();
 
         var app = builder.Build();
+
+        if (app.Environment.IsDevelopment())
+        {
+            await app.Services.InitializeDbAsync();
+        }
 
         // Configure the HTTP request pipeline.
         if (!app.Environment.IsDevelopment())

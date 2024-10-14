@@ -7,7 +7,7 @@ namespace SkillsHubV2.DAL.Repositories;
 public class HardSkillRepository : Repository<HardSkill>, IHardSkillRepository
 {
     private ApplicationDbContext _context;
-    public HardSkillRepository(ApplicationDbContext context) : base(context)
+    public HardSkillRepository (ApplicationDbContext context) : base(context)
     {
         _context = context;
     }
