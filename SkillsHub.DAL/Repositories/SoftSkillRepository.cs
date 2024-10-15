@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SkillsHubV2.DAL.Data;
 using SkillsHubV2.DAL.Repositories.Interfaces;
 using SkillsHubV2.Domain.Entities;
@@ -7,9 +8,13 @@ namespace SkillsHubV2.DAL.Repositories;
 public class SoftSkillRepository : Repository<SoftSkill>, ISoftSkillRepository
 {
     private ApplicationDbContext _context;
-    public SoftSkillRepository(ApplicationDbContext context) : base(context)
+    private ILogger<SoftSkillRepository> _logger;
+
+    public SoftSkillRepository(ApplicationDbContext context,
+        ILogger<SoftSkillRepository> logger) : base(context, logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task UpdateAsync (SoftSkill entity)
@@ -24,6 +29,7 @@ public class SoftSkillRepository : Repository<SoftSkill>, ISoftSkillRepository
             originalEntity.CommunicationStyle = entity.CommunicationStyle;
 
             await _context.SaveChangesAsync();
+            _logger.LogInformation("{Name} entity has been updated", nameof(SoftSkill));
         }
     }
 

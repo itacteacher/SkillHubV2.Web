@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using SkillsHubV2.BLL.Interfaces;
 using SkillsHubV2.Domain.Entities;
+using SkillsHubV2.Web.Filters;
 
 namespace SkillsHubV2.Web.Controllers;
 
@@ -39,6 +40,7 @@ public class HardSkillsController : Controller
         return View();
     }
 
+    [ServiceFilter(typeof(ModelValidationActionFilter))]
     [HttpPost]
     public async Task<IActionResult> Create (HardSkill skill)
     {

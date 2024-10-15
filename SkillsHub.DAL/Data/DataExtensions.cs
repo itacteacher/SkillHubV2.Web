@@ -28,6 +28,6 @@ public static class DataExtensions
         using var scope = serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
 
-        await dbContext.Database.MigrateAsync();  
+        await dbContext.Database.MigrateAsync();
     }
 }

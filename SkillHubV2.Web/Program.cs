@@ -1,10 +1,13 @@
 using FluentValidation;
-using Serilog;
 using SkillsHubV2.BLL.Interfaces;
 using SkillsHubV2.BLL.Services;
 using SkillsHubV2.BLL.Validators;
 using SkillsHubV2.DAL.Data;
 using SkillsHubV2.Domain.Entities;
+using SkillsHubV2.Web.Extensions;
+using SkillsHubV2.Web.Filters;
+using SkillsHubV2.Web.Middleware;
+using System.Diagnostics;
 
 namespace SkillsHubV2.Web;
 
@@ -14,40 +17,40 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
-        // Add services to the container.
-        builder.Services.AddControllersWithViews();
-
         builder.Services.AddDbWithRepositories(builder.Configuration);
 
         builder.Services.AddScoped<ISkillsService<SoftSkill>, SoftSkillsService>();
         builder.Services.AddScoped<ISkillsService<HardSkill>, HardSkillsService>();
         builder.Services.AddScoped<IValidator<HardSkill>, HardSkillValidator>();
 
-        Log.Logger = new LoggerConfiguration()
-            .MinimumLevel.Debug()
-            .Enrich.FromLogContext()
-            .WriteTo.Console()
-            .WriteTo.File("logs/log-.txt", rollingInterval: RollingInterval.Day)
-            .CreateLogger();
+        builder.Services.AddScoped<ModelValidationActionFilter>();
+        builder.Services.AddScoped<CustomExceptionFilter>();
 
-        builder.Host.UseSerilog();
+        builder.Services.AddControllersWithViews(options =>
+        {
+            options.Filters.AddService<CustomExceptionFilter>();
+        });
+
+        builder.ConfigureCustomFileLogging();
 
         var app = builder.Build();
+
+        //app.UseHttpLogging();
+        //app.UseRequestLogging();
 
         if (app.Environment.IsDevelopment())
         {
             await app.Services.InitializeDbAsync();
+            app.UseDeveloperExceptionPage();
         }
-
-        // Configure the HTTP request pipeline.
-        if (!app.Environment.IsDevelopment())
+        else
         {
-            app.UseExceptionHandler("/Home/Error");
-            // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
+            app.UseExceptionHandler("/SoftSkills/Error");
             app.UseHsts();
         }
 
         app.UseHttpsRedirection();
+
         app.UseStaticFiles();
 
         app.UseRouting();
@@ -57,6 +60,14 @@ public class Program
         app.MapControllerRoute(
             name: "default",
             pattern: "{controller=SoftSkills}/{action=Index}/{id?}");
+
+        app.UseStatusCodePagesWithRedirects("/SoftSkills/Error");
+
+        app.Use(async (context, next) =>
+        {
+            context.Items["RequestId"] = Activity.Current?.Id ?? context.TraceIdentifier;
+            await next.Invoke();
+        });
 
         app.Run();
     }

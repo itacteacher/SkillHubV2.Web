@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SkillsHubV2.DAL.Data;
 using SkillsHubV2.DAL.Repositories.Interfaces;
 using SkillsHubV2.Domain.Entities;
@@ -7,9 +8,13 @@ namespace SkillsHubV2.DAL.Repositories;
 public class HardSkillRepository : Repository<HardSkill>, IHardSkillRepository
 {
     private ApplicationDbContext _context;
-    public HardSkillRepository (ApplicationDbContext context) : base(context)
+    private ILogger<HardSkillRepository> _logger;
+
+    public HardSkillRepository (ApplicationDbContext context,
+        ILogger<HardSkillRepository> logger) : base(context, logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task UpdateAsync (HardSkill entity)
@@ -24,6 +29,7 @@ public class HardSkillRepository : Repository<HardSkill>, IHardSkillRepository
             originalEntity.Technology = entity.Technology;
 
             await _context.SaveChangesAsync();
+            _logger.LogInformation("{Name} entity has been updated", nameof(HardSkill));
         }
     }
 

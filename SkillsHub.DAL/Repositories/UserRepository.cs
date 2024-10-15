@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Logging;
 using SkillsHubV2.DAL.Data;
 using SkillsHubV2.DAL.Repositories.Interfaces;
 using SkillsHubV2.Domain.Entities;
@@ -7,10 +8,13 @@ namespace SkillsHubV2.DAL.Repositories;
 public class UserRepository : Repository<User>, IUserRepository
 {
     private readonly ApplicationDbContext _context;
+    private ILogger<UserRepository> _logger;
 
-    public UserRepository (ApplicationDbContext context) : base(context)
+    public UserRepository (ApplicationDbContext context,
+        ILogger<UserRepository> logger) : base(context, logger)
     {
         _context = context;
+        _logger = logger;
     }
 
     public async Task UpdateAsync (User entity)
@@ -32,6 +36,7 @@ public class UserRepository : Repository<User>, IUserRepository
             }
 
             await _context.SaveChangesAsync();
+            _logger.LogInformation("{Name} entity has been updated", nameof(User));
         }
     }
 }

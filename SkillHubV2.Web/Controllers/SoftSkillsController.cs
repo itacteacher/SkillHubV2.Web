@@ -1,8 +1,12 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using SkillsHubV2.BLL.Interfaces;
 using SkillsHubV2.Domain.Entities;
+using SkillsHubV2.Web.Models;
+using System.Diagnostics;
 
 namespace SkillsHubV2.Web.Controllers;
+
 public class SoftSkillsController : Controller
 {
     private readonly ISkillsService<SoftSkill> _softSkillsService;
@@ -17,8 +21,6 @@ public class SoftSkillsController : Controller
 
     public async Task<IActionResult> Index ()
     {
-        _logger.LogInformation("Вход в метод Index()");
-
         try
         {
             var skills = await _softSkillsService.GetAllAsync();
@@ -27,8 +29,6 @@ public class SoftSkillsController : Controller
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Ошибка в методе Index()");
-
             return StatusCode(500, "Произошла ошибка");
         }
     }
@@ -116,5 +116,19 @@ public class SoftSkillsController : Controller
         await _softSkillsService.DeleteAsync(id);
 
         return RedirectToAction(nameof(Index));
+    }
+
+    public IActionResult Error ()
+    {
+        var requestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+
+        var error = new ErrorViewModel
+        {
+            RequestId = requestId
+        };
+
+        _logger.LogError("An error occurred. RequestId: {Id}", requestId);
+
+        return View("Error", error);
     }
 }
