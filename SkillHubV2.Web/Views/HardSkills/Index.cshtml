@@ -1,9 +1,11 @@
-﻿@model List<SkillsHubV2.Domain.Entities.HardSkill>
+﻿@using SkillsHubV2.Domain.Entities
+@model List<SkillsHubV2.Domain.Entities.HardSkill>
 
 @{
     ViewBag.Title = "Hard Skill Details";
 }
 
+<!-- Таблица с существующими навыками -->
 <table class="table">
     <thead>
         <tr>
@@ -14,9 +16,6 @@
                 @Html.DisplayNameFor(model => model.First().Description)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.First().Level)
-            </th>
-            <th>
                 @Html.DisplayNameFor(model => model.First().Technology)
             </th>
             <th></th>
@@ -24,6 +23,7 @@
     </thead>
     <tbody>
         @foreach (var skill in Model)
+
         {
             <tr>
                 <td>
@@ -31,9 +31,6 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => skill.Description)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => skill.Level)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => skill.Technology)
@@ -47,11 +44,10 @@
     </tbody>
 </table>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New Skill</a>
-</p>
+<!-- Кнопка для вызова модального окна добавления нового навыка -->
+<button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addHardSkillModal">
+    Add new Hard Skill
+</button>
 
-
-
-
-
+<!-- Модальное окно для создания нового Hard Skill -->
+<partial name="AddHardSkillModal" model="new SkillsHubV2.Domain.Entities.HardSkill()" />
