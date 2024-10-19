@@ -1,4 +1,27 @@
-﻿// Please see documentation at https://learn.microsoft.com/aspnet/core/client-side/bundling-and-minification
-// for details on configuring this project to bundle and minify static web assets.
+﻿function openHardSkillModal() {
+    $('#addSkillModal').modal('show');
+    $('#addSkillModalLabel').text("Hard Skill creation");
+    $('#addSkillModal .modal-body').load('/HardSkills/Create');
+}
 
-// Write your JavaScript code.
+function openSoftSkillModal() {
+    $('#addSkillModal').modal('show');
+    $('#addSkillModalLabel').text("Soft Skill creation");
+    $('#addSkillModal .modal-body').load('/SoftSkills/Create');
+}
+
+document.addEventListener('DOMContentLoaded', function () {
+    const hardSkillButton = document.getElementById('openHardSkillModalButton');
+
+    if (hardSkillButton) {
+        hardSkillButton.addEventListener('click', openHardSkillModal);
+    }
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const softSkillButton = document.getElementById('openSoftSkillModalButton');
+
+    if (softSkillButton) {
+        softSkillButton.addEventListener('click', openSoftSkillModal);
+    }
+});

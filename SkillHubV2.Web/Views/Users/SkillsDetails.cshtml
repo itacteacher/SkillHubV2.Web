@@ -1,0 +1,31 @@
+﻿@{
+    ViewBag.Title = "Details for skills of user with ID " + ViewBag.Id;
+}
+
+<h2>Details for skills of user with ID @ViewBag.Id</h2>
+
+@if (ViewBag.FoundSkills.Count > 0)
+
+{
+    <h3>Found skills:</h3>
+    <ul>
+        @foreach (var skill in ViewBag.FoundSkills)
+
+        {
+            <li>@skill</li>
+        }
+    </ul>
+}
+
+@if (ViewBag.NotFoundSkills.Count > 0)
+
+{
+    <h3>Skills not found:</h3>
+    <ul>
+        @foreach (var skill in ViewBag.NotFoundSkills)
+
+        {
+            <li>@skill</li>
+        }
+    </ul>
+}

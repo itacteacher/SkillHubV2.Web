@@ -4,71 +4,56 @@ using SkillsHubV2.BLL.Services;
 using SkillsHubV2.BLL.Validators;
 using SkillsHubV2.DAL.Data;
 using SkillsHubV2.Domain.Entities;
-using SkillsHubV2.Web.Extensions;
-using SkillsHubV2.Web.Filters;
-using SkillsHubV2.Web.Middleware;
-using System.Diagnostics;
 
 namespace SkillsHubV2.Web;
 
 public class Program
 {
-    public static async Task Main (string[] args)
-    {
-        var builder = WebApplication.CreateBuilder(args);
+	public static async Task Main(string[] args)
+	{
+		var builder = WebApplication.CreateBuilder(args);
 
-        builder.Services.AddDbWithRepositories(builder.Configuration);
+		builder.Services.AddDbWithRepositories(builder.Configuration);
 
-        builder.Services.AddScoped<ISkillsService<SoftSkill>, SoftSkillsService>();
-        builder.Services.AddScoped<ISkillsService<HardSkill>, HardSkillsService>();
-        builder.Services.AddScoped<IValidator<HardSkill>, HardSkillValidator>();
+		builder.Services.AddScoped<ISpecificSkillService<SoftSkill>, SoftSkillService>();
+		builder.Services.AddScoped<ISpecificSkillService<HardSkill>, HardSkillService>();
+		builder.Services.AddScoped<ISkillService, SkillService>();
+		builder.Services.AddScoped<IUserService, UserService>();
+		builder.Services.AddScoped<IValidator<HardSkill>, HardSkillValidator>();
 
-        builder.Services.AddScoped<ModelValidationActionFilter>();
-        builder.Services.AddScoped<CustomExceptionFilter>();
+		builder.Services.AddControllersWithViews();
 
-        builder.Services.AddControllersWithViews(options =>
-        {
-            options.Filters.AddService<CustomExceptionFilter>();
-        });
 
-        builder.ConfigureCustomFileLogging();
+		var app = builder.Build();
 
-        var app = builder.Build();
+		if (app.Environment.IsDevelopment())
+		{
+			await app.Services.InitializeDbAsync();
+			app.UseDeveloperExceptionPage();
+		}
+		else
+		{
+			app.UseExceptionHandler("/SoftSkills/Error");
+			app.UseHsts();
+		}
 
-        //app.UseHttpLogging();
-        //app.UseRequestLogging();
+		app.UseHttpsRedirection();
 
-        if (app.Environment.IsDevelopment())
-        {
-            await app.Services.InitializeDbAsync();
-            app.UseDeveloperExceptionPage();
-        }
-        else
-        {
-            app.UseExceptionHandler("/SoftSkills/Error");
-            app.UseHsts();
-        }
+		app.UseStaticFiles();
 
-        app.UseHttpsRedirection();
+		app.UseRouting();
 
-        app.UseStaticFiles();
+		app.UseAuthorization();
 
-        app.UseRouting();
+		app.MapControllerRoute(
+			name: "users",
+			pattern: "users/{id}/{*skills}",
+			defaults: new { controller = "Users", action = "GetSkills" });
 
-        app.UseAuthorization();
+		app.MapControllerRoute(
+			name: "default",
+			pattern: "{controller=Dashboard}/{action=Index}/{id?}");
 
-        app.MapControllerRoute(
-            name: "default",
-            pattern: "{controller=SoftSkills}/{action=Index}/{id?}");
-
-        app.UseStatusCodePagesWithRedirects("/SoftSkills/Error");
-
-        app.Use(async (context, next) =>
-        {
-            context.Items["RequestId"] = Activity.Current?.Id ?? context.TraceIdentifier;
-            await next.Invoke();
-        });
-
-        app.Run();
-    }
+		app.Run();
+	}
 }

@@ -1,0 +1,13 @@
+﻿@{
+    ViewBag.Title = "Skills of user with ID " + ViewBag.Id;
+}
+
+<h2>Skills of user with ID @ViewBag.Id</h2>
+
+<ul>
+    @foreach (var skill in ViewBag.Skills)
+
+    {
+        <li>@skill</li>
+    }
+</ul>

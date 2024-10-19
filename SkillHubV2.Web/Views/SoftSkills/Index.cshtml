@@ -47,9 +47,8 @@
     </tbody>
 </table>
 
-<p>
-    <a asp-action="Create" class="btn btn-primary">Create New Skill</a>
-</p>
+<button class="btn btn-primary" id="openSoftSkillModalButton" onclick="openSoftSkillModal()">Add New Soft Skill</button>
+@await Html.PartialAsync("_CreateModal", new SkillsHubV2.Domain.Entities.SoftSkill())
 
 
 

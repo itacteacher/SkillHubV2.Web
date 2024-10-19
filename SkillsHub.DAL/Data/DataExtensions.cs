@@ -17,13 +17,14 @@ public static class DataExtensions
 
         services.AddScoped<ISoftSkillRepository, SoftSkillRepository>();
         services.AddScoped<IHardSkillRepository, HardSkillRepository>();
+        services.AddScoped<ISkillRepository, SkillRepository>();
         services.AddScoped<IUserRepository, UserRepository>();
 
         return services;
     }
 
     //Only for Development env!
-    public static async Task InitializeDbAsync(this IServiceProvider serviceProvider)
+    public static async Task InitializeDbAsync (this IServiceProvider serviceProvider)
     {
         using var scope = serviceProvider.CreateScope();
         var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();

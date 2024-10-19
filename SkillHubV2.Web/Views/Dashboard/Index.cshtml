@@ -1,0 +1,57 @@
+﻿@model IEnumerable<SkillsHubV2.Domain.Entities.User>
+@{
+    var allSkills = ViewData["AllSkills"] as IEnumerable<SkillsHubV2.Domain.Entities.Skill>;
+}
+
+<div class="container mt-5">
+    <h2 class="text-center">Dashboard</h2>
+    <div class="row">
+        @foreach (var user in Model)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="~/images/profile-placeholder.svg" class="card-img-top" alt="User Image">
+                    <div class="card-body">
+                        <h5 class="card-title">@user.Username</h5>
+                        <p class="card-text">Email: @user.Email</p>
+
+                        <h6>Skills:</h6>
+                        <ul>
+                            @foreach (var skill in user.Skills)
+
+                            {
+                                <li>@skill.Name @skill.GetType().Name</li>
+                            }
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <div class="mt-5">
+        <h3 class="text-center">All Skills</h3>
+        <table class="table table-bordered table-striped">
+            <thead>
+                <tr>
+                    <th>Skill Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var skill in allSkills)
+
+                {
+                    <tr>
+                        <td>@skill.Name</td>
+                        <td>@skill.GetType().Name</td>
+                        <td>@skill.Description</td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+
+    <button asp-user-message="Hello, user!">Click Me</button>
+</div>
